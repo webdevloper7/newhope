@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, CheckCircle, Plus, Fingerprint, Activity } from 'lucide-react';
-import { manageData } from '../utils/localStorage';
+import { manageData } from '../../utils/localStorage';
 
 const HealthPass = () => {
   const [records, setRecords] = useState([]);

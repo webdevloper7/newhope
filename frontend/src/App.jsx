@@ -1,109 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import Shop from './components/Shop';
-import Doctors from './components/Doctors';
-import About from './components/About';
-import Booking from './components/Booking';
-import Contact from './components/Contact';
-import MapSection from './components/MapSection';
-import PetHealthBlog from './components/PetHealthBlog';
-import Footer from './components/Footer';
-import WhatsAppFloat from './components/WhatsAppFloat';
-import EmergencyFloat from './components/EmergencyFloat';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+
+// Layout & Common
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import WhatsAppFloat from './components/common/WhatsAppFloat';
+import EmergencyFloat from './components/common/EmergencyFloat';
+
+// Lazy Loaded Sections
+const Hero = lazy(() => import('./components/layout/Hero'));
+const Services = lazy(() => import('./components/sections/Services'));
+const About = lazy(() => import('./components/sections/About'));
+const Doctors = lazy(() => import('./components/sections/Doctors'));
+const Shop = lazy(() => import('./components/sections/Shop'));
+const PetHealthBlog = lazy(() => import('./components/sections/PetHealthBlog'));
+const Booking = lazy(() => import('./components/sections/Booking'));
+const MapSection = lazy(() => import('./components/sections/MapSection'));
+const Contact = lazy(() => import('./components/sections/Contact'));
+
 import { INITIAL_CLINIC_INFO, INITIAL_SERVICES, INITIAL_DOCTORS } from './utils/mockData';
 import { manageData } from './utils/localStorage';
 
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+  </div>
+);
+
 function App() {
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  // Dynamic Data
   const [clinicInfo, setClinicInfo] = useState(manageData.clinicInfo.get(INITIAL_CLINIC_INFO));
   const [services, setServices] = useState(manageData.services.getAll(INITIAL_SERVICES));
   const [doctors, setDoctors] = useState(manageData.doctors.getAll(INITIAL_DOCTORS));
 
-  const updateClinicInfo = (newInfo) => {
-    setClinicInfo(newInfo);
-    manageData.clinicInfo.save(newInfo);
-  };
-
-  const updateServices = (newServices) => {
-    setServices(newServices);
-    manageData.services.save(newServices);
-  };
-
-  const updateDoctors = (newDoctors) => {
-    setDoctors(newDoctors);
-    manageData.doctors.save(newDoctors);
-  };
-
   if (!clinicInfo || !services || !doctors) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading clinic data...</div>;
+    return <div className="p-12 text-center text-lg">Loading clinic data...</div>;
   }
 
   return (
-    <Router>
-      <div className="app">
-        <Header 
-          clinicName={clinicInfo.name} 
-          onAdminClick={() => setIsAdminOpen(true)} 
-        />
-        <main>
-          <Routes>
-            <Route path="/" element={
-              <React.Suspense fallback={<div>Loading...</div>}>
-                <Hero clinicName={clinicInfo.name} taglines={clinicInfo.taglines || []} />
-                <Services services={services || []} />
-                <About />
-                <Doctors doctors={doctors || []} />
-                <Shop />
-                <PetHealthBlog />
-                <Booking phone={clinicInfo.contacts?.[0]} />
-                <MapSection address={clinicInfo.address} />
-                <Contact info={clinicInfo} />
-              </React.Suspense>
-            } />
-            <Route path="/admin" element={
-              isLoggedIn ? (
-                <AdminDashboard 
-                  clinicInfo={clinicInfo} 
-                  services={services} 
-                  doctors={doctors}
-                  onUpdateClinic={updateClinicInfo}
-                  onUpdateServices={updateServices}
-                  onUpdateDoctors={updateDoctors}
-                />
-              ) : (
-                <AdminLogin onLogin={() => setIsLoggedIn(true)} />
-              )
-            } />
-          </Routes>
-        </main>
-        <Footer info={clinicInfo} />
-        <WhatsAppFloat phone={clinicInfo.contacts[0]} />
-        <EmergencyFloat numbers={clinicInfo.contacts} />
-        
-        {/* Hidden SEO-friendly div */}
-        <div style={{ display: 'none' }} aria-hidden="true">
-          New Hope Veterinary Clinic is dedicated to providing high-quality medical care for pets. Compassionate veterinary care, advanced treatment, and quality pet products — all in one place. Best Veterinary Clinic in Pune.
-        </div>
+    <HelmetProvider>
+      <Router>
+        <div className="app min-h-screen bg-gray-50">
+          <Helmet>
+            <title>{clinicInfo.name} | Best Veterinary Clinic in Pune</title>
+            <meta name="description" content={`${clinicInfo.name}: ${clinicInfo.taglines[1]} Located at ${clinicInfo.address}.`} />
+            <meta name="keywords" content="veterinary clinic, pune vet, pet care, pet surgery, vaccinations, pet shop, animal hospital" />
+          </Helmet>
 
-        {isAdminOpen && !isLoggedIn && (
-          <AdminLogin 
-            onClose={() => setIsAdminOpen(false)} 
-            onLogin={() => {
-              setIsLoggedIn(true);
-              setIsAdminOpen(false);
-            }} 
+          <Header 
+            clinicName={clinicInfo.name} 
           />
-        )}
-      </div>
-    </Router>
+          
+          <main>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/" element={
+                  <>
+                    <Hero clinicName={clinicInfo.name} taglines={clinicInfo.taglines || []} />
+                    <Services services={services || []} />
+                    <About />
+                    <Doctors doctors={doctors || []} />
+                    <Shop />
+                    <PetHealthBlog />
+                    <Booking phone={clinicInfo.contacts?.[0]} />
+                    <MapSection address={clinicInfo.address} />
+                    <Contact info={clinicInfo} />
+                  </>
+                } />
+              </Routes>
+            </Suspense>
+          </main>
+
+          <Footer info={clinicInfo} />
+          <WhatsAppFloat phone={clinicInfo.contacts[0]} />
+          <EmergencyFloat numbers={clinicInfo.contacts} />
+        </div>
+      </Router>
+    </HelmetProvider>
   );
 }
 

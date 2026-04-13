@@ -42,21 +42,21 @@ export const INITIAL_DOCTORS = [
     id: 1,
     name: "Dr. Pramod Babanrao Satpute",
     specialty: "B.v.Sc. & A.H.",
-    image: "/dr-pramod.jpg",
+    image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     description: "Expert veterinarian dedicated to providing the highest quality medical care."
   },
   {
     id: 2,
     name: "Dr. Vishal Hiraman Rathod",
     specialty: "B.v.Sc. & A.H.",
-    image: "/dr-vishal.jpg",
+    image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     description: "Surgical specialist committed to clinical excellence and pet welfare."
   },
   {
     id: 3,
     name: "Dr. Neha Durgadas Rathod",
     specialty: "M.v.Sc. & A.H.",
-    image: "/dr-neha.jpg",
+    image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     description: "Master of Veterinary Science specialized in internal medicine and diagnostics."
   }
 ];
