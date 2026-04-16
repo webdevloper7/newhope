@@ -1,8 +1,9 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
+import { formatWhatsAppNumber } from '../../utils/phoneUtils';
 
 const WhatsAppFloat = ({ phone }) => {
-  const whatsappNumber = phone?.replace(/[^0-9]/g, '') || '918600584199'; 
+  const whatsappNumber = formatWhatsAppNumber(phone);
   
   const professionalMessage = `Hello New Hope Veterinary Clinic! 👋
 
@@ -26,7 +27,7 @@ Please let me know how to proceed! Thank you.`;
       rel="noopener noreferrer"
       aria-label="Contact on WhatsApp"
     >
-      <div className="absolute -left-32 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md border border-gray-100">
+      <div className="absolute -left-32 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md border border-gray-100 hidden sm:block">
         Chat with us!
       </div>
       <MessageCircle size={32} className="group-hover:rotate-12 transition-transform" />

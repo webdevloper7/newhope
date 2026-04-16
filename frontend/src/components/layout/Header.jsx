@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, MapPin, Heart } from 'lucide-react';
+import { Menu, X, Phone, MapPin, Heart, Calendar } from 'lucide-react';
 
 const Header = ({ clinicName }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +24,7 @@ const Header = ({ clinicName }) => {
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white shadow-lg py-2' : 'bg-transparent py-4'
+      scrolled ? 'bg-white/95 backdrop-blur-sm shadow-lg py-2' : 'bg-transparent py-4'
     }`}>
       {/* Top bar (Hidden on scroll or mobile) */}
       {!scrolled && (
@@ -39,14 +39,12 @@ const Header = ({ clinicName }) => {
         </div>
       )}
 
-      <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
-            <Heart size={24} fill="white" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+            <Heart size={20} className="sm:w-6 sm:h-6" fill="white" />
           </div>
-          <span className={`text-xl lg:text-2xl font-black tracking-tighter ${
-            scrolled ? 'text-gray-900' : 'text-gray-900'
-          }`}>
+          <span className={`text-lg sm:text-xl lg:text-2xl font-black tracking-tighter text-gray-900`}>
             {clinicName?.split(' ')[0]} <span className="text-primary font-bold">HOPE</span>
           </span>
         </Link>
@@ -62,15 +60,23 @@ const Header = ({ clinicName }) => {
               {link.name}
             </a>
           ))}
+          <a href="#booking" className="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-primary-dark transition-all flex items-center gap-2">
+            <Calendar size={16}/> Book Now
+          </a>
         </nav>
 
-        {/* Mobile Toggle */}
-        <button 
-          className="lg:hidden p-2 text-gray-900" 
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={28}/> : <Menu size={28}/>}
-        </button>
+        {/* Mobile Toggle & CTA */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <a href="#booking" className="bg-primary text-white p-2 rounded-lg shadow-md sm:px-4 sm:py-2 sm:rounded-xl sm:text-sm font-bold flex items-center gap-1">
+            <Calendar size={18} className="sm:w-4 sm:h-4"/> <span className="hidden sm:inline">Book</span>
+          </a>
+          <button 
+            className="p-2 text-gray-900 bg-gray-100 rounded-lg" 
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={24}/> : <Menu size={24}/>}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -81,12 +87,20 @@ const Header = ({ clinicName }) => {
               <a 
                 key={link.name}
                 href={link.hash || link.path}
-                className="text-lg font-bold text-gray-800"
+                className="text-lg font-bold text-gray-800 border-b border-gray-50 pb-2"
                 onClick={() => setIsOpen(false)}
               >
                 {link.name}
               </a>
             ))}
+            <div className="pt-4 flex flex-col gap-3">
+              <a href="tel:8600584199" className="flex items-center justify-center gap-2 bg-gray-100 text-gray-900 py-4 rounded-xl font-bold">
+                <Phone size={20}/> Call Clinic
+              </a>
+              <a href="#booking" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20">
+                <Calendar size={20}/> Book Appointment
+              </a>
+            </div>
           </div>
         </div>
       )}
