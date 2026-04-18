@@ -1,9 +1,9 @@
 export const STORAGE_KEYS = {
-  SERVICES: 'nhv_services_v4',
-  DOCTORS: 'nhv_doctors_v4',
-  APPOINTMENTS: 'nhv_appointments_v4',
-  CLINIC_INFO: 'nhv_clinic_info_v4',
-  NOTIFICATIONS: 'nhv_notifications_v4'
+  SERVICES: 'nhv_services_v5',
+  DOCTORS: 'nhv_doctors_v5',
+  APPOINTMENTS: 'nhv_appointments_v5',
+  CLINIC_INFO: 'nhv_clinic_info_v5',
+  NOTIFICATIONS: 'nhv_notifications_v5'
 };
 
 export const loadData = (key, initialValue) => {
